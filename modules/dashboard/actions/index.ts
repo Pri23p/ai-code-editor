@@ -110,7 +110,7 @@ export const deleteProjectById = async (id: string) => {
 
 export const editProjectById = async (
   id: string,
-  data: { title: string; description: string }
+  data: { title: string; description: string | null}
 ) => {
   try {
     await db.playground.update({
@@ -135,7 +135,7 @@ export const duplicateProjectById = async (id: string) => {
       throw new Error("Original playground not found");
     }
 
-    const duplicatedPlayground = await db.playground.create({
+    await db.playground.create({
       data: {
         title: `${originalPlayground.title} (Copy)`,
         description: originalPlayground.description,
@@ -147,7 +147,6 @@ export const duplicateProjectById = async (id: string) => {
     });
 
     revalidatePath("/dashboard");
-    return duplicatedPlayground;
   } catch (error) {
     console.error("Error duplicating project:", error);
   }
