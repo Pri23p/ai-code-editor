@@ -10,10 +10,10 @@ export const getUserById = async (id:string)=>{
         const user = await db.user.findUnique({
             where:{id},
             include:{
-                accounts:true
-            }
-        })
-        return user
+                accounts: true,
+            },
+        });
+        return user;
     } catch (error) {
          console.log(error)
         return null

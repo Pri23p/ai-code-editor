@@ -78,7 +78,7 @@ model Playground {
 model StarMark {
   id  String @id @default(cuid()) @map("_id")
   userId String
-  playgroundId String?
+  playgroundId String
   isMarked  Boolean
   createdAt  DateTime  @default(now())
   user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
