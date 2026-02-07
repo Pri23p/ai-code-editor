@@ -7,9 +7,9 @@
     "deploy": "wrangler deploy"
   },
   "dependencies": {
-    "hono": "^3.10.0"
+    "hono": "^4.11.8"
   },
   "devDependencies": {
-    "wrangler": "^3.0.0"
+    "wrangler": "^4.63.0"
   }
 }
