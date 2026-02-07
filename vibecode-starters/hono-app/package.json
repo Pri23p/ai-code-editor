@@ -1,0 +1,15 @@
+{
+  "name": "hono-app",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "hono": "^3.10.0"
+  },
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  }
+}
