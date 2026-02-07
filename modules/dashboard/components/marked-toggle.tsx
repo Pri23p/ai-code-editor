@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { StarIcon, StarOffIcon } from "lucide-react"
 import type React from "react"
 import { useState, useEffect, forwardRef } from "react"
+import { useRouter } from "next/navigation";
 import { toast } from "sonner"
 import { toggleStarMarked } from "../actions"
 
@@ -15,6 +16,7 @@ interface MarkedToggleButtonProps extends React.ComponentPropsWithoutRef<typeof 
 
 export const MarkedToggleButton = forwardRef<HTMLButtonElement, MarkedToggleButtonProps>(
   ({ markedForRevision, id, onClick, className, children, ...props }, ref) => {
+    const router = useRouter()
     const [isMarked, setIsMarked] = useState(markedForRevision)
 
     useEffect(() => {
@@ -29,25 +31,22 @@ export const MarkedToggleButton = forwardRef<HTMLButtonElement, MarkedToggleButt
       const newMarkedState = !isMarked
       setIsMarked(newMarkedState)
 
-      try {
-        const res = await toggleStarMarked(id, newMarkedState)
-        const {success ,error , isMarked} = res;
+    try {
+      const res = await toggleStarMarked(id, newMarkedState)
+      const {success ,error , isMarked} = res;
 
-    //    if ismarked true then show marked successfully otherwise show start over
-        if (isMarked && !error && success) {
-          toast.success("Added to Favorites successfully")
-        } else {
-          toast.success("Removed from Favorites successfully")
-        }
-
-
-
-      } catch (error) {
-        console.error("Failed to toggle mark for revision:", error)
-        setIsMarked(!newMarkedState) // Revert state if the update fails
-        // You might want to add a toast notification here for the user
+      if (isMarked && !error && success) {
+        toast.success("Added to Favorites successfully")
+      } else {
+        toast.success("Removed from Favorites successfully")
       }
+
+      // Refresh to update server-derived lists (e.g. sidebar starred list)
+      router.refresh();
+    } catch (error) {
+      toast.error("Failed to update favorite status")
     }
+    } 
 
     return (
       <Button

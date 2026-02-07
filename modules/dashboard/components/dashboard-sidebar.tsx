@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
@@ -21,6 +21,11 @@ import {
   FlameIcon,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useState } from "react"
+import TemplateSelectingModal from "./template-selecting-modal"
+import { createPlayground } from "../actions"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 import {
   Sidebar,
   SidebarContent,
@@ -61,6 +66,8 @@ export function DashboardSidebar({ initialPlaygroundData }: { initialPlaygroundD
   const pathname = usePathname()
   const [starredPlaygrounds, setStarredPlaygrounds] = useState(initialPlaygroundData.filter((p) => p.starred))
   const [recentPlaygrounds, setRecentPlaygrounds] = useState(initialPlaygroundData)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const router = useRouter()
 
   return (
     <Sidebar variant="inset" collapsible="icon" className="border-1 border-r">
@@ -99,7 +106,9 @@ export function DashboardSidebar({ initialPlaygroundData }: { initialPlaygroundD
             Starred
           </SidebarGroupLabel>
           <SidebarGroupAction title="Add starred playground">
-            <Plus className="h-4 w-4" />
+            <button onClick={() => setIsModalOpen(true)} aria-label="Add starred playground">
+              <Plus className="h-4 w-4" />
+            </button>
           </SidebarGroupAction>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -129,13 +138,32 @@ export function DashboardSidebar({ initialPlaygroundData }: { initialPlaygroundD
           </SidebarGroupContent>
         </SidebarGroup>
 
+        <TemplateSelectingModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSubmit={async (data) => {
+            try {
+              const res = await createPlayground(data)
+              setIsModalOpen(false)
+              toast.success("Playground Created successfully")
+              // navigate to the new playground
+              if (res?.id) router.push(`/playground/${res.id}`)
+            } catch (err) {
+              console.error(err)
+              toast.error("Failed to create playground")
+            }
+          }}
+        />
+
         <SidebarGroup>
           <SidebarGroupLabel>
             <History className="h-4 w-4 mr-2" />
             Recent
           </SidebarGroupLabel>
           <SidebarGroupAction title="Create new playground">
-            <FolderPlus className="h-4 w-4" />
+            <button onClick={() => setIsModalOpen(true)} aria-label="Create new playground">
+              <FolderPlus className="h-4 w-4" />
+            </button>
           </SidebarGroupAction>
           <SidebarGroupContent>
             <SidebarMenu>
