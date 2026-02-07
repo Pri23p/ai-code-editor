@@ -1,0 +1,9 @@
+node_modules
+.next
+.git
+vibecode-starters/**/node_modules
+vibecode-starters/**/package-lock.json
+vibecode-starters/**/.angular
+*.log
+.env.local
+.DS_Store
