@@ -10,9 +10,10 @@ import {
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
-import { LogOut, User } from "lucide-react";
+import { LogOut, User, Settings, LayoutDashboard } from "lucide-react";
 import LogoutButton from "./logout-button";
 import { useCurrentUser } from "../hooks/use-current-user";
+import Link from "next/link";
 
 const UserButton = () => {
 
@@ -32,10 +33,23 @@ const UserButton = () => {
       </DropdownMenuTrigger>
 
     <DropdownMenuContent className="mr-4">
-      <DropdownMenuItem>
-        <span>
+      <DropdownMenuItem disabled>
+        <span className="font-medium">
           {user?.email}
         </span>
+      </DropdownMenuItem>
+      <DropdownMenuSeparator/>
+      <DropdownMenuItem asChild>
+        <Link href="/dashboard" className="cursor-pointer">
+          <LayoutDashboard className="h-4 w-4 mr-2"/>
+          Dashboard
+        </Link>
+      </DropdownMenuItem>
+      <DropdownMenuItem asChild>
+        <Link href="/settings" className="cursor-pointer">
+          <Settings className="h-4 w-4 mr-2"/>
+          Settings
+        </Link>
       </DropdownMenuItem>
       <DropdownMenuSeparator/>
         <LogoutButton>

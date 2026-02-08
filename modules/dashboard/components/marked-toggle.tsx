@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 
-import { StarIcon, StarOffIcon } from "lucide-react"
+import { Star } from "lucide-react"
 import type React from "react"
 import { useState, useEffect, forwardRef } from "react"
 import { useRouter } from "next/navigation";
@@ -24,18 +24,25 @@ export const MarkedToggleButton = forwardRef<HTMLButtonElement, MarkedToggleButt
     }, [markedForRevision])
 
     const handleToggle = async (event: React.MouseEvent<HTMLButtonElement>) => {
+      // Prevent dropdown from closing
+      event.preventDefault()
+      event.stopPropagation()
+      
+      console.log("MarkedToggleButton clicked", { id, isMarked });
+      
       // Call the original onClick if provided by the parent (DropdownMenuItem)
-        console.log("MarkedToggleButton clicked", { id, isMarked });
       onClick?.(event)
 
       const newMarkedState = !isMarked
+      
+      // Update state immediately for instant visual feedback
       setIsMarked(newMarkedState)
 
     try {
       const res = await toggleStarMarked(id, newMarkedState)
-      const {success ,error , isMarked} = res;
+      const {success ,error , isMarked: updatedMarked} = res;
 
-      if (isMarked && !error && success) {
+      if (updatedMarked && !error && success) {
         toast.success("Added to Favorites successfully")
       } else {
         toast.success("Removed from Favorites successfully")
@@ -45,6 +52,8 @@ export const MarkedToggleButton = forwardRef<HTMLButtonElement, MarkedToggleButt
       router.refresh();
     } catch (error) {
       toast.error("Failed to update favorite status")
+      // Revert state on error
+      setIsMarked(!newMarkedState)
     }
     } 
 
@@ -56,15 +65,18 @@ export const MarkedToggleButton = forwardRef<HTMLButtonElement, MarkedToggleButt
         onClick={handleToggle}
         {...props}
       >
-        {isMarked ? (
-          <StarIcon size={16} className="text-red-500 mr-2" />
-        ) : (
-          <StarOffIcon size={16} className="text-gray-500 mr-2" />
-        )}
+        <Star 
+          size={16} 
+          className={`mr-2 transition-all ${
+            isMarked 
+              ? 'fill-yellow-400 text-yellow-400' 
+              : 'fill-none text-gray-400 hover:text-yellow-400'
+          }`}
+        />
         {children || (isMarked ? "Remove Favorite" : "Add to Favorite")}
       </Button>
     )
-  },
+  }
 )
 
 MarkedToggleButton.displayName = "MarkedToggleButton"

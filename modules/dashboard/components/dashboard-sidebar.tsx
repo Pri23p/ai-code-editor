@@ -102,7 +102,7 @@ export function DashboardSidebar({ initialPlaygroundData }: { initialPlaygroundD
 
         <SidebarGroup>
           <SidebarGroupLabel>
-            <Star className="h-4 w-4 mr-2" />
+            <Star className={`h-4 w-4 mr-2 ${starredPlaygrounds.length > 0 ? 'text-yellow-500 fill-yellow-500' : ''}`} />
             Starred
           </SidebarGroupLabel>
           <SidebarGroupAction title="Add starred playground">
@@ -187,8 +187,8 @@ export function DashboardSidebar({ initialPlaygroundData }: { initialPlaygroundD
                 })
               )}
               <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="View all">
-                  <Link href="/playgrounds">
+                <SidebarMenuButton asChild tooltip="View all playgrounds">
+                  <Link href="/dashboard">
                     <span className="text-sm text-muted-foreground">View all playgrounds</span>
                   </Link>
                 </SidebarMenuButton>
